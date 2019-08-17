@@ -144,26 +144,13 @@ class Paintings extends Component {
 
     this.state.museum.events.AdoptionPaintingAdded({fromBlock: 0, toBlock: 'latest'})
     .on('data', function(event){
-      // console.log(event); 
-      // const result = event.returnValues;
-      // const paintingId = result.paintingID;
-      // const newOwner = result.owner;
-      // //filter the painting with the id in the event
-      // const paintings = component.state.paintings.filter(p => p.id == paintingId );
-      // const painting = paintings[0];
+      const paintingId = event.returnValues.paintingID;
+      const paintings = component.state.paintings.filter(p => p.id == paintingId );
+      const painting = paintings[0];
 
-      // // component.getSomeUserInfo(newOwner).then((data) => {  
-      // //   console.log('Data from getSomeUserInfo: ' + data);  
-      // // }).catch((error) => {  
-      // //   console.log('Error from getSomeUserInfo(): ' + error);  
-      // // });
-      
-      // const paintingArray = [...component.state.paintings];
-      // const index = paintingArray.indexOf(painting);
-      // paintingArray[index] = {...painting};
-      // paintingArray[index].owner = newOwner;
-  
-      // component.setState({ paintings: paintingArray });
+      let msg = "User " + event.returnValues.owner + " is owner for the : " + painting.name;
+
+      console.log( msg);
            
     })
     .on('error', console.error);
@@ -232,6 +219,18 @@ class Paintings extends Component {
     this.setState({ paintings: paintingArray });
   };
 
+  handleAdoptionExpiry = async(painting) =>{
+    try{
+      let accounts = await this.state.web3.eth.getAccounts()
+      await this.state.museum.methods.reverseAdoption(painting.id).send({from: accounts[0]})
+    } catch (error) {
+      alert(
+        `Failed to reverse the adoption. Check console for details.`
+      );
+      console.log(error);
+    }
+  }
+
   render() {
     return (
       <div className="m-5">
@@ -269,6 +268,7 @@ class Paintings extends Component {
             onAdd={this.handleAddPainting}
             onSet={this.handleSetOwnerName}
             onAdopt={this.handleAdoption}
+            onExpiry={this.handleAdoptionExpiry}
           />
         ))}
       </div>

@@ -2,19 +2,6 @@ import React, { Component } from "react";
 
 class Painting extends Component {
 
-  // handleAddPainting = () => {
-  //   console.log("Adding painting", this);
-  // };
-
-  // handleAdoption = () => {
-  //   console.log("adopting the paining", this);
-  // };
-
-  // handleStatus = () => {
-  //   console.log("Get current status", this);
-  //   this.setState({ owner: "newOwner" });
-  // };
-
   render() {
     return (
       <div className="container m-5 card" style={{ width: 600 }}>
@@ -49,6 +36,13 @@ class Painting extends Component {
 
           <button onClick={()=>this.props.onSet(this.props.painting)} className="btn btn-secondary m-2">
             Set Name
+          </button>
+          
+          <button
+            onClick={()=>this.props.onExpiry(this.props.painting)}
+            className="btn btn-secondary m-2"
+          >
+            Reverse Adoption
           </button>
         </div>
       </div>
